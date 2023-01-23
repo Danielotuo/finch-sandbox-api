@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Employee Directory</title>
+  <style>
+    /* Add styles to make the table clean and rows separatable */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th,
+    td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Employee ID</th>
+      <th>Manager</th>
+      <th>Department</th>
+      <th>Is Active</th>
+      <th>Personal data</th>
+      <th>Employment data</th>
+    </tr>
+    {% for employee in employees %}
+    <tr>
+      <td>{{ employee.first_name }} {{ employee.last_name }}</td>
+      <td>{{ employee.id }}</td>
+      <td>{% if employee.get("manager") %}{{ employee.get("manager") }}{% else %}None{% endif %}</td>
+      <td>{{ employee.get("department").get("name") }}</td>
+      <td>{{ employee.get("is_active") }}</td>
+      <td>
+        <!-- Create a form to submit the employee's ID to the /employee_data route -->
+        <form action="{{ url_for('employee_data') }}" method="post">
+          <input type="hidden" name="employee_id" value="{{ employee.id }}">
+          <input type="submit" value="View Details">
+        </form>
+      </td>
+      <td>
+        <form action="{{ url_for('employment_data') }}" method="post">
+          <input type="hidden" name="employee_id" value="{{ employee.id }}">
+          <input type="submit" value="View Details">
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+
+</html>

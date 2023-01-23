@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Employee Personal Data</title>
+  <style>
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 25px;
+    }
+
+    .employee-data {
+      margin: 0 auto;
+      width: 80%;
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .employee-data p {
+      margin-bottom: 10px;
+    }
+
+    .employee-data ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .employee-data li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Employee Personal Data</h1>
+  {% for employee in employee_data %}
+  <div class="employee-data">
+    <p><strong>ID:</strong> {{ employee.individual_id }}</p>
+    <p><strong>First Name:</strong> {{ employee.body.first_name }}</p>
+    <p><strong>Middle Name:</strong> {{ employee.body.middle_name }}</p>
+    <p><strong>Last Name:</strong> {{ employee.body.last_name }}</p>
+    <p><strong>Preferred Name:</strong> {{ employee.body.preferredName }}</p>
+    <p><strong>Emails:</strong></p>
+    <ul>
+      {% for email in employee.body.emails %}
+      <li>{{ email.data }} ({{ email.type }})</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Phone Numbers:</strong></p>
+    <ul>
+      {% for phone_number in employee.body.phone_numbers %}
+      <li>{{ phone_number.data }} ({{ phone_number.type }})</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Gender:</strong> {{ employee.body.gender }}</p>
+    <p><strong>Ethnicity:</strong> {{ employee.body.ethnicity }}</p>
+    <p><strong>DOB:</strong> {{ employee.body.dob }}</p>
+    <p><strong>Residence:</strong></p>
+    <ul>
+      <li><strong>Line 1:</strong> {{ employee.body.residence.line1 }}</li>
+      <li><strong>Line 2:</strong> {{ employee.body.residence.line2 }}</li>
+      <li><strong>City:</strong> {{ employee.body.residence.city }}</li>
+      <li><strong>State:</strong> {{ employee.body.residence.state }}</li <li>Postal Code: {{
+      employee.body.residence.postal_code }}</li>
+      <li>Country: {{ employee.body.residence.country }}</li>
+    </ul>
+    {% endfor %}
+</body>
+
+</html>

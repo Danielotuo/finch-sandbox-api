@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Provider Form</title>
+  <style>
+    /* Add styles to center the form */
+    form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+
+<body>
+  <form method="post" action="{{ url_for('submit_form') }}">
+    <h1>Select Provider:</h1>
+    <select name="provider">
+      <option value="gusto">Gusto</option>
+      <option value="bamboohr">BambooHR</option>
+      <option value="justworks">JustWorks</option>
+      <option value="paychex_flex">Paychex Flex</option>
+      <option value="workday">Workday</option>
+    </select>
+    <br><br>
+    <input type="submit" value="Submit">
+  </form>
+</body>
+
+</html>

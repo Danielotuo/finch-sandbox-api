@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Employment Data</title>
+  <style>
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      margin-bottom: 25px;
+    }
+
+    .employee-data {
+      margin: 0 auto;
+      width: 80%;
+      padding: 30px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .employee-data p {
+      margin-bottom: 10px;
+    }
+
+    .employee-data ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .employee-data li {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  {% for employee in employment_data %}
+  <div class="employee-data">
+    <h3>Employment Information of {{ employee.body.first_name }} {{ employee.body.last_name }}</h3>
+    <p><strong>ID:</strong> {{ employee.body.id }}</p>
+    <p><strong>Title:</strong> {{ employee.body.title }}</p>
+    <p><strong>Manager:</strong> {{ employee.body.get("manager", {}).get("id", "N/A") }}</p>
+
+
+
+    <p><strong>Department:</strong> {{ employee.body.department.name }}</p>
+    <p><strong>Employment Type:</strong> {{ employee.body.employment.type }}</p>
+    <p><strong>Employment Subtype:</strong> {{ employee.body.employment.subtype }}</p>
+
+    <p><strong>Start Date:</strong> {{ employee.body.start_date }}</p>
+    <p><strong>End Date:</strong> {% if employee.body.end_date %}{{ employee.body.end_date }}{% else %}Not available{%
+      endif %}</p>
+    <p><strong>Is Active:</strong> {{ employee.body.is_active }}</p>
+    <p><strong>Class Code:</strong> {{ employee.body.class_code }}</p>
+    <div>
+      <p><strong>Location:</strong></p>
+      <p>{{ employee.get('body').get('location').get('line1') }}</p>
+      <p>{{ employee.get('body').get('location').get('line2') }}</p>
+      <p>{{ employee.get('body').get('location').get('city') }}, {{ employee.get('body').get('location').get('state') }}
+        {{ employee.get('body').get('location').get('postal_code') }}, {{
+        employee.get('body').get('location').get('country') }}</p>
+    </div>
+    <p><strong>Income:</strong> {{ employee.body.income.amount }} {{ employee.body.income.currency }} per {{
+      employee.body.income.unit }} (effective as of {{ employee.body.income.effective_date }})</p>
+    <h4>Income History</h4>
+    <ul>
+      {% for income in employee.body.income_history %}
+      <li>{{ income.amount }} {{ income.currency }} per {{ income.unit }} (effective as of {{ income.effective_date }})
+      </li>
+      {% endfor %}
+    </ul>
+    <h4>Custom Fields</h4>
+    <ul>
+      {% for field in employee.body.custom_fields %}
+      <li>{{ field.name }}: {{ field.value }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</body>
+
+</html>
