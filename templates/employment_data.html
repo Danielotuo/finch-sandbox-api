@@ -39,10 +39,8 @@
     <h3>Employment Information of {{ employee.body.first_name }} {{ employee.body.last_name }}</h3>
     <p><strong>ID:</strong> {{ employee.body.id }}</p>
     <p><strong>Title:</strong> {{ employee.body.title }}</p>
-    <p><strong>Manager:</strong> {{ employee.body.get("manager", {}).get("id", "N/A") }}</p>
-
-
-
+    <p><strong>Manager:</strong> {% if employee.body.get("manager") %}{{ employee.body.manager.get("id", "N/A") }}{%
+      else %}N/A{% endif %}</p>
     <p><strong>Department:</strong> {{ employee.body.department.name }}</p>
     <p><strong>Employment Type:</strong> {{ employee.body.employment.type }}</p>
     <p><strong>Employment Subtype:</strong> {{ employee.body.employment.subtype }}</p>
@@ -64,16 +62,26 @@
       employee.body.income.unit }} (effective as of {{ employee.body.income.effective_date }})</p>
     <h4>Income History</h4>
     <ul>
+      {% if employee.body.income_history %}
       {% for income in employee.body.income_history %}
       <li>{{ income.amount }} {{ income.currency }} per {{ income.unit }} (effective as of {{ income.effective_date }})
       </li>
       {% endfor %}
+      {% else %}
+      <li>No income history available</li>
+      {% endif %}
     </ul>
     <h4>Custom Fields</h4>
     <ul>
+      {% if employee.body.custom_fields %}
       {% for field in employee.body.custom_fields %}
       <li>{{ field.name }}: {{ field.value }}</li>
       {% endfor %}
+      {% else %}
+      <li>No custom fields available</li>
+      {% endif %}
+    </ul>
+
     </ul>
   </div>
   {% endfor %}

@@ -21,7 +21,12 @@ def provider_form():
 # Create a route for the submit form page and choose the provider
 @app.route('/submit_form', methods=['POST'])
 def submit_form():
-    provider = request.form['provider']
+    provider = request.form.get('provider')
+
+    # Validate the provider value
+    if provider not in ["gusto", "bamboohr", "justworks", "paychex_flex", "workday"]:
+        return jsonify(error="Invalid provider value"), 400
+
     data = json.dumps({
         "provider": provider,
         "products": ["company", "directory", "individual", "employment", "payment", "pay_statement"]
@@ -36,24 +41,19 @@ def submit_form():
         headers["Authorization"] = f"Bearer {access_token}"
         session['access_token'] = access_token
 
-
         # Get employer directory and display the data 
         employee_response = requests.get('https://finch-sandbox-se-interview.vercel.app/api/employer/directory', headers=headers)
         employee_response.raise_for_status()
         employee_data = json.loads(employee_response.text)
         individuals = employee_data['individuals']
-        return render_template('employee_directory.html',employees=individuals)
+        return render_template('employee_directory.html', employees=individuals)
 
-        # A custom error message when a provider does not implement a certain endpoint 
+    # Handle errors for each exception
+    except requests.exceptions.HTTPError as errh:
         if employee_response.status_code == 404:
             return jsonify(error=f"This endpoint is not supported by the provider"), 404
         else:
             return jsonify(error=f"HTTP Error: {errh}"), employee_response.status_code
-
-
-    # Handle errors for each exception
-    except requests.exceptions.HTTPError as errh:
-        return jsonify(error=f"HTTP Error: {errh}"), response.status_code
     except requests.exceptions.ConnectionError as errc:
         return jsonify(error=f"Error Connecting: {errc}"), 500
     except requests.exceptions.Timeout as errt:
@@ -62,8 +62,9 @@ def submit_form():
         return jsonify(error=f"Something went wrong: {err}"), 500
 
 
+
 # Create a route for the employee individual or personal data page
-@app.route('/employee_data', methods=['GET', 'POST'])
+@app.route('/submit_form/employee_data', methods=['GET', 'POST'])
 def employee_data():
     if request.method == 'POST':
 
@@ -94,7 +95,7 @@ def employee_data():
 
 
 # Create a route for the employee employment data page
-@app.route('/employment_data', methods=['GET', 'POST'])
+@app.route('/submit_form/employment_data', methods=['GET', 'POST'])
 def employment_data():
     if request.method == 'POST':
         if 'access_token' in session:
@@ -127,5 +128,6 @@ def other_route():
     if 'access_token' in session:
         headers["Authorization"] = f"Bearer {session['access_token']}"
         # Use the access token to make API calls
+        return "session ready"
     else:
         return jsonify(error="No access token found"), 403
